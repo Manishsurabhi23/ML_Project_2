@@ -1,0 +1,17 @@
+seaborn
+scikit-learn
+pandas
+numpy
+matplotlib
+langchain
+openai
+requests
+flask
+sqlalchemy
+django
+catboost
+xgboost
+dill
+pymongo
+
+-e .
