@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: mlproject2
+Version: 0.0.1
+Author: Manish Surabhi
+Author-email: manishsurabhi23@gmail.com
+Requires-Dist: seaborn
+Requires-Dist: scikit-learn
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: langchain
+Requires-Dist: openai
+Requires-Dist: requests
+Requires-Dist: flask
+Requires-Dist: sqlalchemy
+Requires-Dist: django
+Requires-Dist: catboost
+Requires-Dist: xgboost
+Requires-Dist: dill
+Requires-Dist: pymongo
+Dynamic: author
+Dynamic: author-email
+Dynamic: requires-dist

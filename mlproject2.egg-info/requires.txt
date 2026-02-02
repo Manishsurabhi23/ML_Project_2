@@ -13,6 +13,3 @@ catboost
 xgboost
 dill
 pymongo
-certifi
-
--e .

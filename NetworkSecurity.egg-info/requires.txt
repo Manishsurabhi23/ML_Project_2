@@ -14,5 +14,3 @@ xgboost
 dill
 pymongo
 certifi
-
--e .
