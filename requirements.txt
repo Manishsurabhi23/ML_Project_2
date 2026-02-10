@@ -1,19 +1,32 @@
+# Data Analysis & Visualization
 seaborn
-scikit-learn
 pandas
 numpy
 matplotlib
-langchain
-openai
-requests
-flask
-sqlalchemy
-django
+
+# Machine Learning
+scikit-learn
 catboost
 xgboost
-dill
-pymongo
+
+# Deep Learning / LLM
+langchain
+openai
+
+# Web Framework
+flask
+django
+
+# Database
+sqlalchemy
+pymongo[srv]==3.12.3
 certifi
-pymongo[srv]==3.12
-dotenv
+
+# Utilities
+requests
+dill
+python-dotenv
+PyYAML
+
+# Local package installation (must be last)
 -e .
