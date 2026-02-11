@@ -8,10 +8,11 @@ matplotlib
 scikit-learn
 catboost
 xgboost
+lightgbm
 
 # Deep Learning / LLM
-langchain
-openai
+# langchain
+# openai
 
 # Web Framework
 flask
@@ -27,6 +28,8 @@ requests
 dill
 python-dotenv
 PyYAML
+
+mlflow
 
 # Local package installation (must be last)
 -e .

@@ -6,6 +6,8 @@ import os
 import pickle
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import f1_score, precision_score, recall_score
 
 def read_yaml_file(file_path:str)->dict:
     """
@@ -69,6 +71,23 @@ def save_numpy_array_data(file_path: str, array: np.array) -> None:
     except Exception as e:
         raise CustomException(e, sys)
     
+def load_numpy_array_data(file_path: str) -> np.array:
+    """
+    Docstring for load_numpy_array_data
+    
+    :param file_path: Description
+    :type file_path: str
+    :return: Description
+    :rtype: np.array
+    This function loads a numpy array from a file. 
+    It handles exceptions and logs the process.
+    """ 
+    try:
+        with open(file_path, "rb") as file_obj:
+            return np.load(file_obj)
+    except Exception as e:
+        raise CustomException(e, sys)
+    
 def save_object(file_path: str, obj: object) -> None:
     """
     Docstring for save_object
@@ -91,3 +110,48 @@ def save_object(file_path: str, obj: object) -> None:
         logging.info(f"Object saved successfully to file: {file_path}")
     except Exception as e:
         raise CustomException(e, sys)
+    
+def load_object(file_path: str) -> object:
+    """
+    Docstring for load_object
+    
+    :param file_path: Description
+    :type file_path: str
+    :return: Description
+    :rtype: object
+    This function loads a Python object from a file using pickle. 
+    It handles exceptions and logs the process.
+    """ 
+    try:
+        logging.info(f"Loading object from file: {file_path}")
+        with open(file_path, "rb") as file_obj:
+            obj = pickle.load(file_obj)
+        logging.info(f"Object loaded successfully from file: {file_path}")
+        return obj
+    except Exception as e:
+        raise CustomException(e, sys)
+    
+def evaluate_models(x_train,y_train,x_test,y_test,models,params):
+    try:
+        model_report:dict={}
+        for model_name,model in models.items():
+            logging.info(f"Evaluating model: {model_name}")
+            param=params[model_name]
+            gs=GridSearchCV(model,param,cv=5)
+            gs.fit(x_train,y_train)
+            model.set_params(**gs.best_params_)
+            model.fit(x_train,y_train)
+            y_train_pred=model.predict(x_train)
+            y_test_pred=model.predict(x_test)
+            train_model_f1_score=f1_score(y_train,y_train_pred)
+            train_model_precision_score=precision_score(y_train,y_train_pred)
+            train_model_recall_score=recall_score(y_train,y_train_pred)
+            test_model_f1_score=f1_score(y_test,y_test_pred)
+            test_model_precision_score=precision_score(y_test,y_test_pred)
+            test_model_recall_score=recall_score(y_test,y_test_pred)
+            logging.info(f"Best parameters for model {model_name}: {gs.best_params_}. With train f1 score: {train_model_f1_score}, train precision score: {train_model_precision_score}, train recall score: {train_model_recall_score} and test f1 score: {test_model_f1_score}, test precision score: {test_model_precision_score}, test recall score: {test_model_recall_score}")
+            model_report[model_name]=test_model_f1_score
+        return model_report
+    
+    except Exception as e:
+        raise CustomException(e,sys)
