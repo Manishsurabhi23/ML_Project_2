@@ -3,6 +3,7 @@ import os
 import certifi
 import numpy as np 
 import pandas as pd
+from io import BytesIO
 
 from networksecurity.utils.main_utils.utils import load_object
 ca = certifi.where()
@@ -23,11 +24,10 @@ from networksecurity.exception.exception import CustomException
 from networksecurity.logging.logger import logging
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
 
-
 from networksecurity.constant.training_pipeline import DATA_INGESTION_COLLECTION_NAME
 from networksecurity.constant.training_pipeline import DATA_INGESTION_DATABASE_NAME
-client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
 
+client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
 database = client[DATA_INGESTION_DATABASE_NAME]
 collection = database[DATA_INGESTION_COLLECTION_NAME]
 
@@ -44,7 +44,7 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory="./templates")
 
-@app.get("/",tags=["authentication"])
+@app.get("/", tags=["authentication"])
 async def index():
     return RedirectResponse(url="/docs")
 
@@ -52,11 +52,20 @@ async def index():
 @app.post("/train", tags=["training"])
 async def train_route(request: Request):
     try:
-        train_pipeline = TrainingPipeline()
+        logging.info("Starting training pipeline...")
+        # Create the config first
+        training_pipeline_config = TrainingPipelineConfig()
+        # Pass it to the TrainingPipeline
+        train_pipeline = TrainingPipeline(training_pipeline_config=training_pipeline_config)
         train_pipeline.run_pipeline()
-        return Response("training successful!!")
+        logging.info("Training completed successfully!")
+        return Response("Training successful!!")
     except Exception as e:
+        logging.error(f"Training error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise CustomException(e, sys)
+
     
 @app.post("/predict")
 async def predict_route(request: Request, file: UploadFile = File(...)):
@@ -66,7 +75,6 @@ async def predict_route(request: Request, file: UploadFile = File(...)):
         
         # Read CSV properly
         contents = await file.read()
-        from io import BytesIO
         df = pd.read_csv(BytesIO(contents))
         
         logging.info(f"Loaded dataframe with shape: {df.shape}")
@@ -103,7 +111,7 @@ async def predict_route(request: Request, file: UploadFile = File(...)):
             "table.html", 
             {
                 "request": request, 
-                "table": table_html  # Changed from table_html to table
+                "table": table_html
             }
         )
 
@@ -112,6 +120,7 @@ async def predict_route(request: Request, file: UploadFile = File(...)):
         import traceback
         traceback.print_exc()
         raise CustomException(e, sys)
+
 
 if __name__ == "__main__":
     try:
