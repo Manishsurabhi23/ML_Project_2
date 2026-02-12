@@ -82,7 +82,8 @@ class DataTransformation:
             save_numpy_array_data(file_path=self.data_transformation_config.transformed_test_file_path, array=test_arr)
             save_object(file_path=self.data_transformation_config.transformed_object_file_path, obj=preprocessor_obj)
             logging.info("Saved transformed train and test data as numpy arrays")
-
+            #model pusher
+            save_object(file_path="final_models/preprocessor.pkl", obj=preprocessor_obj)
             #preparing artifacts
             data_transformation_artifacts = DataTransformationArtifact(
                 transformed_train_file_path=self.data_transformation_config.transformed_train_file_path,

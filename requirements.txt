@@ -16,6 +16,7 @@ lightgbm
 
 # Web Framework
 flask
+fastapi
 django
 
 # Database
@@ -30,6 +31,8 @@ python-dotenv
 PyYAML
 
 mlflow
-
+dagshub
+uvicorn
+python-multipart
 # Local package installation (must be last)
 -e .

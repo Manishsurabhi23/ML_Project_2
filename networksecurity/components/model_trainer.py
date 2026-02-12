@@ -22,6 +22,13 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier,GradientBoostingClassifier
 from sklearn.svm import SVC
 
+import dagshub
+dagshub.init(repo_owner='Manishsurabhi23', repo_name='ML_Project_2', mlflow=True)
+
+# import mlflow
+# with mlflow.start_run():
+#   mlflow.log_param('parameter name', 'value')
+#   mlflow.log_metric('metric name', 1)
 
 
 class ModelTrainer:
@@ -105,7 +112,9 @@ class ModelTrainer:
             Network_model = NetworkModel(preprocessor=preprocessor, model=best_model)
             save_object(self.model_trainer_config.trained_model_file_path, obj=Network_model)
 
-
+            #save the models to final_models folder
+            #this step is a model pusher you can replace the below code line to push model to s3 bucket etc.;
+            save_object("final_models/model.pkl", obj=best_model)
             #model trainer artifact
             model_trainer_artifact = ModelTrainerArtifact(
                 trained_model_file_path=self.model_trainer_config.trained_model_file_path,
